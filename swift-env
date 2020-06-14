@@ -1,0 +1,83 @@
+#!/bin/bash
+
+#
+#  Swift Environment - Ubuntu 18.04
+#
+
+BINPATH="/usr/local/bin"
+SYMLINK_PATH="$HOME/bin"
+SWIFT_SYMLINK="$SYMLINK_PATH/swift"
+
+function addPathIfNecessary {
+    if echo $PATH | grep -q "$SWIFT_SYMLINK"; then
+        echo "Swift Environment detected in PATH."
+    else
+        echo "Swift Environment not detected in PATH."
+        WARN_PATH="SET"
+    fi
+
+    if ! grep "export PATH=" "$HOME/.bashrc" | grep -q "\$HOME/bin/swift"; then
+        echo "Modify:  $HOME/.bashrc"
+        echo "" >> ~/.bashrc
+        echo "# Swift path exports" >> ~/.bashrc
+        echo "export SWIFT_INSTALL_PATH=$BINPATH" >> ~/.bashrc
+        echo "export SWIFT_BIN_PATH=\$HOME/bin/swift" >> ~/.bashrc
+        echo "export PATH=\$HOME/bin/swift:\$PATH" >> ~/.bashrc
+        echo "" >> ~/.bashrc
+        WARN_PATH="SET"
+    fi
+}
+
+function warnPathIfNecessary {
+    if [ "$WARN_PATH" == "SET" ]; then
+        echo "Please restart terminal or type the following command to ensure your PATH is updated:"
+        echo "source ~/.bashrc"
+    fi
+}
+
+# Handle Flag: --addpath
+if [ "$1" == "--addpath" ]; then
+    addPathIfNecessary
+    warnPathIfNecessary
+    exit 0
+fi
+
+# Require Swift Version Parameter
+if [ "$1" == "" ]; then
+    echo "error: swift-env requires a version argument: swift-env <version>"
+    exit 1
+fi
+
+# Setup Script Variables
+SWIFT_VERSION="$1"
+SWIFT_NAME="swift-${SWIFT_VERSION}"
+SWIFT_INSTALL_PATH="$BINPATH/$SWIFT_NAME"
+SWIFT_BIN_PATH="$SWIFT_INSTALL_PATH/bin"
+
+# Verify specified Swift Version is installed
+if [ ! -d "$SWIFT_BIN_PATH" ]; then
+    echo "Swift $SWIFT_VERSION is not installed."
+    echo "run: sudo swift-install $SWIFT_VERSION"
+    exit 1
+fi
+
+# Configure Environment Variables, if necessary
+addPathIfNecessary
+
+# Create Environment Path, if necessary
+if [ ! -d "$SYMLINK_PATH" ]; then
+    echo "Creating: $SYMLINK_PATH"
+    mkdir $SYMLINK_PATH
+fi
+
+# Create Symlink to specified Swift Version, replace existing
+echo "Unlink:  $SWIFT_SYMLINK"
+rm $SWIFT_SYMLINK
+
+echo "Linking: $SWIFT_SYMLINK -> $SWIFT_BIN_PATH"
+ln -s $SWIFT_BIN_PATH $SWIFT_SYMLINK
+chown -R $(logname) $SYMLINK_PATH
+
+echo "Swift Environment has been set to version $SWIFT_VERSION"
+
+warnPathIfNecessary

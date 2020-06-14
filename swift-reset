@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Require Version Parameter
+if [ "$1" == "" ]; then
+    echo "error: swift-reset requires a version argument: swift-reset <version>"
+    exit 1
+fi
+
+# Require root permissions
+if [[ $EUID -ne 0 ]]; then
+    echo "error: swift-reset must be run as root: sudo swift-reset"
+    exit
+fi
+
+echo "WARNING: This script was created to aid in the development of swift-install and swift-env and was not meant to find wide use."
+echo "Press Ctrl-C now unless you know exactly what this script does!"
+sleep 30
+
+# Setup Script Variables
+BINPATH="/usr/local/bin"
+SWIFT_VERSION="$1"
+SWIFT_NAME="swift-$SWIFT_VERSION"
+SWIFT_INSTALL_PATH="$BINPATH/$SWIFT_NAME"
+SWIFT_SYMLINK="$HOME/bin/swift"
+
+echo "Resetting Swift $SWIFT_VERSION installation..."
+if [ -d "$SWIFT_INSTALL_PATH" ]; then
+    echo "Removing Installation Files..."
+    rm -rf $SWIFT_INSTALL_PATH
+fi
+
+if [ "$2" == "--full" ]; then
+    if [ -d "$SWIFT_SYMLINK" ]; then
+        echo "Removing Environment Symlink..."
+        rm $SWIFT_SYMLINK
+    fi
+
+    echo "You need to manually remove Swift Environment Variables. Opening .bashrc for editing..."
+    sleep 5
+    editor "$HOME/.bashrc"
+fi
+
+echo "Swift Installation for version $SWIFT_VERSION has been reset."

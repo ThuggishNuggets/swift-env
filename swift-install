@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#
+#  Swift Install - Ubuntu 18.04
+#
+
+# Require version parameter
+if [ "$1" == "" ]; then
+    echo "error: swift-install requires a version argument: swift-install <version>"
+    exit 1
+fi
+
+# Require root permissions
+if [[ $EUID -ne 0 ]]; then
+    echo "error: swift-install must be run as root"
+    exit 1
+fi
+
+# Setup Script Variables
+BINPATH="/usr/local/bin"
+SWIFT_VERSION="$1"
+SWIFT_NAME="swift-${SWIFT_VERSION}"
+SWIFT_INSTALL_PATH="$BINPATH/$SWIFT_NAME"
+SWIFT_BIN_PATH="$SWIFT_INSTALL_PATH/bin"
+SWIFT_SYMLINK="$HOME/bin/swift"
+SWIFT_TAR_NAME="${SWIFT_NAME}-RELEASE-ubuntu18.04"
+SWIFT_TAR_FILE="${SWIFT_TAR_NAME}.tar.gz"
+SWIFT_TAR_URL="https://swift.org/builds/${SWIFT_NAME}-release/ubuntu1804/${SWIFT_NAME}-RELEASE/${SWIFT_TAR_FILE}"
+
+# Install Dependencies
+echo "Installing Swift Dependencies"
+sudo apt-get update
+sudo apt-get install clang libicu-dev libpython2.7 libcurl4
+
+# Install Swift, if necessary
+if [ -d "$SWIFT_INSTALL_PATH" ]; then
+    echo "Skipping file installation. Swift $SWIFT_VERSION directory already exists."
+else
+    echo "Creating: $SWIFT_INSTALL_PATH"
+    mkdir $SWIFT_INSTALL_PATH
+    cd $SWIFT_INSTALL_PATH
+
+    echo "Downloading: $SWIFT_TAR_URL"
+    wget $SWIFT_TAR_URL
+
+    echo "Extracting: $SWIFT_TAR_FILE"
+    tar xf $SWIFT_TAR_FILE
+
+    echo "Installing: $SWIFT_INSTALL_PATH"
+    cd $SWIFT_TAR_NAME/usr
+    mv * ../../
+    cd ../../
+
+    echo "Cleaning Up"
+    rm $SWIFT_TAR_FILE
+    rm -rf $SWIFT_TAR_NAME
+fi
+
+swift-env $SWIFT_VERSION
