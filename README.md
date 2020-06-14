@@ -14,11 +14,6 @@ Downloads and installs the version of the Swift language and toolchain matching 
 
 This command installs Swift versions for all users, while changing the currently selected Swift environment is a per-user setting utilizing symlinks in the user's `home` directory so multiple simultaneous users of the same server will not interfere with one another's environment settings.
 
-Requires the use of `sudo` to copy the downloaded Swift binaries to `/usr/local/bin` and to install the following dependencies:
-- `clang`
-- `libicu-dev`
-- `libpython2.7`
-- `libcurl4`
 
 ```
 Usage: sudo swift install <version>
@@ -27,6 +22,12 @@ Examples:
 sudo swift install 4.2.1
 sudo swift install 5.2.4
 ```
+
+Requires the use of `sudo` to copy the downloaded Swift binaries to `/usr/local/bin` and to install the following dependencies:
+- `clang`
+- `libicu-dev`
+- `libpython2.7`
+- `libcurl4`
 
 # Command: `swift-env`
 Changes the current sym-linked Swift environments to the supplied version. Prompts to use `swift install <version>` if and installation matching the version argument cannot be found. Changing the currently selected Swift environment is a per-user setting utilizing symlinks in the user's `home` directory so multiple simultaneous users of the same server will not interfere with one another's environment settings.
@@ -42,11 +43,11 @@ swift env 5.2.4
 # Command: `swift-reset`
 DEV COMMAND. Don't use this unless you've read the script and understand what it does first. This command was created to aid in the development and testing of the `swift-env` and `swift-install` commands. It accepts a Swift version and attempts to remove it and any symlinks to it, after which it opens `.bashrc` in the default editor application so that you can edit the `PATH` and environment variables manually.
 
-Requires the use of `sudo` to manipulate the Swift installations found in `/usr/local/bin`.
-
 ```
 Usage: sudo swift reset <version>
 
 Example:
 sudo swift reset 4.2.1
 ```
+
+Requires the use of `sudo` to manipulate the Swift installations found in `/usr/local/bin`.
