@@ -14,7 +14,11 @@ Downloads and installs the version of the Swift language and toolchain matching 
 
 This command installs Swift versions for all users, while changing the currently selected Swift environment is a per-user setting utilizing symlinks in the user's `home` directory so multiple simultaneous users of the same server will not interfere with one another's environment settings.
 
-Requires the use of `sudo` to copy the downloaded Swift binaries to `/usr/local/bin`.
+Requires the use of `sudo` to copy the downloaded Swift binaries to `/usr/local/bin` and to install the following dependencies:
+- `clang`
+- `libicu-dev`
+- `libpython2.7`
+- `libcurl4`
 
 ```
 Usage: sudo swift install <version>
