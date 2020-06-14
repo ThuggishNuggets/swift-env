@@ -3,7 +3,7 @@ A Swift Language and Toolchain Installer and Environment switcher/selector for U
 - Quickly install any existing public release version of the Swift Language and Toolchain using just the version number (e.g. `swift install 5.2.4`)
 - Quickly switch between any installed Swift versions with a single command (e.g. `swift env 4.2.1`)
 - Supports multi-user server environments, installations of Swift are shared for all users, but environments selections are per-user, no need to worry about another user screwing up your environment settings!
-- Can be easily modified to support Ubuntu 20.04 LTS by editing the download URLs in `swift-install` to match.
+- Can be easily modified to support Ubuntu 20.04 LTS by editing the download URLs in `swift-install` to match the URL pattern found on the [Swift.org download page](https://swift.org/download/).
 
 # Installation
 - Clone repo and copy files `swift-env`, `swift-install` and, optionally, `swift-reset` to `/usr/local/bin` (for shared server setups, you can change this to whatever you want, but you'll be responsible for updating the respective scripts to point to the correct location)
