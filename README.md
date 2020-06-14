@@ -1,4 +1,4 @@
-# swift-env
+# About this project
 A Swift Language and Toolchain Installer and Environment switcher/selector for Ubuntu 18.04 LTS. You can think of it a bit like `rbenv`.
 - Quickly install any existing public release version of the Swift Language and Toolchain using just the version number (e.g. `swift install 5.2.4`)
 - Quickly switch between any installed Swift versions with a single command (e.g. `swift env 4.2.1`)
